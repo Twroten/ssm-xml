@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wroten.mybatis.hello.mapper.ClientMapper">
+    <select id="login_1" resultType="Client">
+        SELECT id, username, password
+        FROM client
+        WHERE username = #{username}
+          AND password = #{password}
+    </select>
+
+    <select id="login_2" resultType="Client">
+        SELECT id, username, password
+        FROM client
+        WHERE username = #{username}
+          AND password = #{password}
+    </select>
+
+    <select id="login_3" resultType="Client">
+        SELECT id, username, password
+        FROM client
+        WHERE username = #{username}
+          AND password = #{password}
+    </select>
+
+</mapper>

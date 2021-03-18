@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.wroten.mybatis.hello.mapper.EmployeeMapper">
+
+    <select id="query" resultType="Employee">
+        SELECT id, name, sn, salary, deptId
+        FROM employee
+        WHERE 1=1
+        <if test="minSalary!=null">
+            AND salary &gt;= #{minSalary}
+        </if>
+        <if test="maxSalary!=null">
+            AND salary &lt;= #{maxSalary}
+        </if>
+        <choose>
+            <when test="deptId > 0">AND deptId = #{deptId}</when>
+            <otherwise>AND deptId IS NOT NULL</otherwise>
+        </choose>
+    </select>
+
+</mapper>

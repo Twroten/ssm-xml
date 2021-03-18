@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- DI注解解析器-->
+    <context:annotation-config/>
+    <!-- Ioc注解解析器-->
+    <context:component-scan base-package="com.wall.ssm.service"/>
+    <!-- tx注解解析器-->
+    <tx:annotation-driven transaction-manager="txManager"/>
+
+    <!-- 1:加载db.properties文件-->
+    <context:property-placeholder location="classpath:db.properties" system-properties-mode="NEVER"/>
+
+    <!--2:配置Druid连接池-->
+    <bean id="myDataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--3:配置SqlSessionFactory-->
+    <bean id="mySqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--1:关联连接池-->
+        <property name="dataSource" ref="myDataSource"/>
+        <!--2:配置MyBatis属性配置-->
+        <!--<property name="configLocation" value="classpath:mybatis-config.xml"/>-->
+        <property name="configurationProperties">
+            <value>
+                lazyLoadingEnable=true
+                aggressiveLazyLoading=false
+                lazyLoadingTriggerMethods=close
+            </value>
+        </property>
+        <!--3:配置为哪个包起别名-->
+        <property name="typeAliasesPackage" value="com.wall.ssm"/>
+        <!--4:关联Mapper文件-->
+        <property name="mapperLocations" value="classpath:mappers/*Mapper.xml"/>
+    </bean>
+
+    <!-- 4:Mapper接口扫描器-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.wall.ssm.mapper"/>
+    </bean>
+    <!--5事务管理器-->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="myDataSource"/>
+    </bean>
+
+</beans>
